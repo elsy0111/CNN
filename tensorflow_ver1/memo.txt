@@ -1,0 +1,12 @@
+[目的]
+・画像の認識を行う
+・とりあえず１～９の文字の認識をできるようにする予定
+・本番では正解の画像が分かればいい
+--->過学習の問題は多分考慮しない
+
+[使用したURL]
+https://qiita.com/tawago/items/931bea2ff6d56e32d693
+--->tensorflow 手書き数字の認識、大まかな内容理解、python使用、コードが分かりやすいかも
+
+https://codelabs.developers.google.com/codelabs/tfjs-training-classfication/index.html?hl=ja#6
+--->JavaSprictだった。tensorflow 手書き数字の認識(コードの目的が分かりやすい！)
