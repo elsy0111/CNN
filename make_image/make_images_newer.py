@@ -11,9 +11,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 #*----- import -----
 
-images = np.load("Dataset_1000/images.npy")
+images = np.load("Dataset_10000/images.npy")
 
-labels = np.load("Dataset_1000/labels.npy")
+labels = np.load("Dataset_10000/labels.npy")
 
 #*----- ここからCNN -----
 
@@ -108,7 +108,7 @@ model.compile(optimizer='adam',
 
 
 #----- 学習開始 -----
-EPOCHS = 40   # 学習回数の指定
+EPOCHS = 50   # 学習回数の指定
 history = model.fit(train_images, train_labels, epochs=EPOCHS, 
                     validation_data=(test_images, test_labels))
 #----- 機械の予測の出力 -----
@@ -132,13 +132,27 @@ prediction = prediction.tolist()
 prediction = np.array(prediction, dtype='float')
 """
 
+True_cnt = 0
+False_cnt = 0
+
 for j in range(len(prediction)):
     pr = prediction[j]
     ans = test_labels[j]
-    print("max prediction : " ,max(pr))
-    print("max_prediction_index : ",np.argmax(pr) + 1)
-    print("answer : ", np.argmax(ans) + 1)
+    pr_m = np.argmax(pr) + 1
+    ans_m = np.argmax(ans) + 1
+    print("----------------------------")
+    if pr_m == ans_m:
+        print("／＼" , " -index : ", pr_m)
+        print("＼／" , " answer : ", ans_m)
+        True_cnt += 1
+    else:
+        print("＼／" , " -index : ", pr_m)
+        print("／＼" , " answer : ", ans_m)
+        False_cnt += 1
 
+print("True_cnt  : ", True_cnt)
+print("False_cnt : ", False_cnt)
+print("Accuracy  : ", True_cnt/len(prediction))
 exit()
 
 import matplotlib.pyplot as plt
