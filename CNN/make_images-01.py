@@ -20,7 +20,7 @@ import imageio
 #*----- import -----
 from operator import imod
 import tensorflow as tf
-from tensorflow.keras import layers, models
+from keras import layers, models
 import matplotlib.pyplot as plt
 
 import numpy as np
