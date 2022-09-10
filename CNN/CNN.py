@@ -71,8 +71,8 @@ model.add(layers.Dense(512, activation='relu'))
 model.add(layers.Dense(256, activation='relu'))
 model.add(layers.Dense(128, activation='relu'))
 
-# rate = 0.07
-# model.add(layers.Dropout(rate))
+rate = 0.07
+model.add(layers.Dropout(rate))
 # model.add(layers.SpatialDropout1D(rate))
 
 model.add(layers.Dense(88, activation='sigmoid'))  # 0~1での出力(確率が高いほど1に近づく)
@@ -140,7 +140,7 @@ import matplotlib.pyplot as plt
 
 #*----- グラフ用(conpile後に置く) -----
 def plot_loss_accuracy_graph(history):
-    plt.ylim([0.5, 1])
+    plt.ylim([0, 1])
     plt.plot(history.history['loss'], "-o", color = (0, 0, 1), label = 'train_loss', linewidth = 2)
     plt.plot(history.history['val_loss'], "-o", color = (0, 0, 1, 0.35), label = 'val_loss', linewidth = 1.5)
     plt.title('LOSS')
