@@ -45,6 +45,7 @@ print("train_labels[0]: ", train_labels[0]) # ndarray(ラベルの要素)
 # 画像処理(特徴を見つける)
 # 活性化関数: relu
 # layers: Conc2D(畳み込み層), MaxPooling2D(プーリング層)
+
 model = models.Sequential()
 model.add(layers.Conv2D(32, (5, 5), activation='relu', 
           input_shape=(high, width, 1)))
@@ -66,10 +67,7 @@ model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 # 数値の収束に'softmax'を使用してる(省略してます)
 
 model.add(layers.Flatten())
-model.add(layers.Dense(1024, activation='relu'))
 model.add(layers.Dense(512, activation='relu'))
-model.add(layers.Dense(256, activation='relu'))
-model.add(layers.Dense(128, activation='relu'))
 
 rate = 0.07
 model.add(layers.Dropout(rate))
@@ -122,6 +120,8 @@ for j in range(len(prediction)):
     pr_m = np.argmax(pr) + 1    # max_index
     ans_m = np.argmax(ans) + 1  # answer_index
     print("----------------------------")
+    print("prediction[j]  : ", pr)
+    print("test_labels[j] : ", ans)
     if pr_m == ans_m:
         print("／＼" , " -index : ", pr_m)
         print("＼／" , " answer : ", ans_m)
