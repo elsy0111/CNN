@@ -8,9 +8,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 #*----- import -----
 
-images = np.load("Dataset_10000/images.npy")
+images = np.load("Dataset_1000/images.npy")
 
-labels = np.load("Dataset_10000/labels.npy")
+labels = np.load("Dataset_1000/labels.npy")
 
 #*----- ここからCNN -----
 
@@ -93,17 +93,11 @@ model.compile(optimizer='adam',
 
 
 #----- 学習開始 -----
-EPOCHS = 40   # 学習回数の指定
+EPOCHS = 50   # 学習回数の指定
 history = model.fit(train_images, train_labels, epochs=EPOCHS, 
                     validation_data=(test_images, test_labels))
 
 #----- 機械の予測の出力 -----
-plt.plot(history.history['accuracy'], label='accuracy')
-plt.plot(history.history['val_accuracy'], label = 'val_accuracy')
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy')
-plt.ylim([0.5, 1])
-plt.legend(loc='lower right')
 
 #----- テスト結果の出力 -----
 test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
@@ -140,19 +134,28 @@ for j in range(len(prediction)):
 print("True_cnt  : ", True_cnt)
 print("False_cnt : ", False_cnt)
 print("Accuracy  : ", True_cnt/len(prediction))
-exit()
+# exit()
 
 import matplotlib.pyplot as plt
-#*グラフ用(conpile後に置く)
-def plot_loss_accuracy_graph(fit_record):
-    # 青い線で誤差の履歴をぷろっと
-    plt.plot(fit_record.history['loss'], "-D", color = 'blue', label = 'train_loss', linewidth = 2)
-    plt.plot(fit_record.history['val_loss'], "-D", color = 'black', label = 'val_loss', linewidth = 2)
+
+#*----- グラフ用(conpile後に置く) -----
+def plot_loss_accuracy_graph(history):
+    plt.ylim([0.5, 1])
+    plt.plot(history.history['loss'], "-o", color = (0, 0, 1), label = 'train_loss', linewidth = 2)
+    plt.plot(history.history['val_loss'], "-o", color = (0, 0, 1, 0.35), label = 'val_loss', linewidth = 1.5)
     plt.title('LOSS')
     plt.xlabel('Epochs')
-    plt.ylabel('Loss')
+    #plt.ylabel('Loss')
     plt.legend(loc = 'upper right')
+    #plt.show()
+    
+    plt.plot(history.history['accuracy'], "-o", color = (1, 0, 0), label = 'train_accuracy', linewidth = 2)
+    plt.plot(history.history['val_accuracy'], "-o", color = (1, 0, 0, 0.35), label = 'val_accuracy', linewidth = 1.5)
+    plt.title('LOSS & ACCURACY')
+    plt.xlabel('Epochs')
+    #plt.ylabel('Accuracy')
+    plt.ylabel('Accuracy & loss')
+    plt.legend(loc="lower right")
     plt.show()
     
-
 plot_loss_accuracy_graph(history)
