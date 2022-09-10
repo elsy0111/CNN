@@ -66,7 +66,7 @@ list_num = 88
 # layers: Conc2D(畳み込み層), MaxPooling2D(プーリング層)
 # 
 model = models.Sequential()
-model.add(layers.Conv2D(128, (5, 5), activation='relu', 
+model.add(layers.Conv2D(64, (5, 5), activation='relu', 
           input_shape=(high, width, 1)))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (5, 5), activation='relu'))
@@ -108,7 +108,7 @@ model.compile(optimizer='adam',
 
 
 #----- 学習開始 -----
-EPOCHS = 50   # 学習回数の指定
+EPOCHS = 75   # 学習回数の指定
 history = model.fit(train_images, train_labels, epochs=EPOCHS, 
                     validation_data=(test_images, test_labels))
 #----- 機械の予測の出力 -----
