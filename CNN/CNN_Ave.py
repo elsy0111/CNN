@@ -148,8 +148,6 @@ for hoge in range(3):
 
     #*----- グラフ用(conpile後に置く) -----
     def plot_loss_accuracy_graph(history):
-        global Total_True_Test_Acc
-        
         if hoge == 1:
             plt.xlabel('Epochs')
             plt.ylabel('Loss & Accuracy')
@@ -162,13 +160,7 @@ for hoge in range(3):
         elif hoge == 2:
             l_style = "-."
         else:
-            l_style = ":"
-            Total_True_Test_Acc /= 3
-            plt.title('Ave_Acc : ' + str(Total_True_Test_Acc))
-            x = np.arange(0,EPOCHS)
-            y = x * 0 + Total_True_Test_Acc
-            plt.plot(x, y, '-', color = 'c', label = 'Ave_Acc ' + str(hoge), linewidth = 3)
-            
+            l_style = ":"    
         
         plt.plot(history.history['loss'], l_style, color = 'b', label = 'train_loss ' + str(hoge), linewidth = 2)
         plt.plot(history.history['accuracy'], l_style, color = 'r', label = 'train_accuracy ' + str(hoge), linewidth = 2)
@@ -178,6 +170,12 @@ for hoge in range(3):
         plt.plot(x, y, l_style, color = 'k', label = 'True_Test_Acc ' + str(hoge), linewidth = 2)
         
     plot_loss_accuracy_graph(history)
+
+Total_True_Test_Acc /= 3
+plt.title('Ave_Acc : ' + str(Total_True_Test_Acc))
+x = np.arange(0,EPOCHS)
+y = x * 0 + Total_True_Test_Acc        
+plt.plot(x, y, '-', color = 'c', label = 'Ave_Acc ' + str(hoge), linewidth = 3)
 
 plt.legend(loc = "lower right")
 plt.yticks(np.arange(0, 1.01, 0.1))
