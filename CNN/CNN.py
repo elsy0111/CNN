@@ -50,13 +50,10 @@ model = models.Sequential()
 model.add(layers.Conv2D(32, (5, 5), activation='relu', 
           input_shape=(high, width, 1)))
 model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(32, (5, 5), activation='relu'))
+model.add(layers.Conv2D(32, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(32, (5, 5), activation='relu'))
+model.add(layers.Conv2D(32, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 
 # model.summary()
 
@@ -67,9 +64,8 @@ model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 # 数値の収束に'softmax'を使用してる(省略してます)
 
 model.add(layers.Flatten())
-model.add(layers.Dense(512, activation='relu'))
 
-rate = 0.07
+rate = 0.6
 model.add(layers.Dropout(rate))
 # model.add(layers.SpatialDropout1D(rate))
 
@@ -119,43 +115,49 @@ for j in range(len(prediction)):
     ans = test_labels[j]
     pr_m = np.argmax(pr) + 1    # max_index
     ans_m = np.argmax(ans) + 1  # answer_index
-    print("----------------------------")
-    print("prediction[j]  : ", pr)
-    print("test_labels[j] : ", ans)
+    
+    # print("----------------------------")
+    # print("prediction[j]  : ", pr)
+    # print("test_labels[j] : ", ans)
+    
     if pr_m == ans_m:
-        print("／＼" , " -index : ", pr_m)
-        print("＼／" , " answer : ", ans_m)
+        # print("／＼" , " -index : ", pr_m)
+        # print("＼／" , " answer : ", ans_m)
         True_cnt += 1
     else:
-        print("＼／" , " -index : ", pr_m)
-        print("／＼" , " answer : ", ans_m)
+        # print("＼／" , " -index : ", pr_m)
+        # print("／＼" , " answer : ", ans_m)
         False_cnt += 1
 
+True_Test_Acc = True_cnt/len(prediction)
 print("True_cnt  : ", True_cnt)
 print("False_cnt : ", False_cnt)
-print("Accuracy  : ", True_cnt/len(prediction))
+print("Accuracy  : ", True_Test_Acc)
 # exit()
 
 import matplotlib.pyplot as plt
 
 #*----- グラフ用(conpile後に置く) -----
 def plot_loss_accuracy_graph(history):
+    plt.title('True_Test_Acc : ' + str(True_Test_Acc))
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss & Accuracy')
+
     plt.ylim([0, 1])
+    plt.xlim([0,EPOCHS])
+
     plt.plot(history.history['loss'], "-o", color = (0, 0, 1), label = 'train_loss', linewidth = 2)
-    plt.plot(history.history['val_loss'], "-o", color = (0, 0, 1, 0.35), label = 'val_loss', linewidth = 1.5)
-    plt.title('LOSS')
-    plt.xlabel('Epochs')
-    #plt.ylabel('Loss')
-    plt.legend(loc = 'upper right')
-    #plt.show()
-    
     plt.plot(history.history['accuracy'], "-o", color = (1, 0, 0), label = 'train_accuracy', linewidth = 2)
-    plt.plot(history.history['val_accuracy'], "-o", color = (1, 0, 0, 0.35), label = 'val_accuracy', linewidth = 1.5)
-    plt.title('LOSS & ACCURACY')
-    plt.xlabel('Epochs')
-    #plt.ylabel('Accuracy')
-    plt.ylabel('Accuracy & loss')
-    plt.legend(loc="lower right")
-    plt.show()
+
+    x = np.arange(0,EPOCHS)
+    y = x * 0 + True_Test_Acc
+    plt.plot(x, y, color = (0, 1, 0), label = 'True_Test_Acc', linewidth = 2)
+
+    plt.legend(loc = "lower right")
+    plt.yticks(np.arange(0, 1.01, 0.1))
+
+    plt.grid(axis = 'y')
     
 plot_loss_accuracy_graph(history)
+
+plt.show()
