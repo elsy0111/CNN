@@ -1,5 +1,6 @@
 #*----- import -----
 from operator import imod
+from tkinter import W
 import tensorflow as tf
 from keras import layers, models
 import matplotlib.pyplot as plt
@@ -77,8 +78,10 @@ for hoge in range(3):
     # model.add(layers.SpatialDropout1D(rate))
 
     model.add(layers.Dense(88, activation='sigmoid'))  # 0~1での出力(確率が高いほど1に近づく)
+    
     # パラメーターなどの表示(省略可)
-    model.summary()
+    if hoge == 1:
+        model.summary()
 
     # [optimizerの種類]https://www.tensorflow.org/api_docs/python/tf/keras/optimizers
     #* lossの指定
@@ -87,7 +90,6 @@ for hoge in range(3):
 
     #----- compile -----
     model.compile(optimizer='adam',
-                #optimizer='SGD', 
                 loss=loss,
                 metrics=['accuracy']
                 )
@@ -105,8 +107,7 @@ for hoge in range(3):
     print(" ")
     print("test_accuracy: ", test_acc)
     print("test_loss:     ", test_loss)
-    # 予測値
-    print("loss: ", type(loss))
+    
     prediction = model.predict(test_images)
 
     """
@@ -175,11 +176,10 @@ Total_True_Test_Acc /= 3
 plt.title('Ave_Acc : ' + str(Total_True_Test_Acc))
 x = np.arange(0,EPOCHS)
 y = x * 0 + Total_True_Test_Acc        
-plt.plot(x, y, '-', color = 'c', label = 'Ave_Acc ' + str(hoge), linewidth = 3)
+plt.plot(x, y, '-', color = 'c', label = 'Ave_Acc ', linewidth = 3)
 
-plt.legend(loc = "lower right")
+plt.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0)
 plt.yticks(np.arange(0, 1.01, 0.1))
-
 plt.grid(axis = 'y')
-        
+
 plt.show()
