@@ -1,6 +1,4 @@
 #*----- import -----
-from operator import imod
-from tkinter import W
 import tensorflow as tf
 from keras import layers, models
 import matplotlib.pyplot as plt
