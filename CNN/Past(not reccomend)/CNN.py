@@ -1,5 +1,4 @@
 #*----- import -----
-from operator import imod
 import tensorflow as tf
 from keras import layers, models
 import matplotlib.pyplot as plt
@@ -8,9 +7,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 #*----- import -----
 
-images = np.load("Dataset_1000/images.npy")
+images = np.load("../../Use_CNN_Dataset/03/Dataset_5000_3(1)/images.npy")
 
-labels = np.load("Dataset_1000/labels.npy")
+labels = np.load("../../Use_CNN_Dataset/03/Dataset_5000_3(1)/labels.npy")
 
 #*----- ここからCNN -----
 
@@ -47,12 +46,10 @@ print("train_labels[0]: ", train_labels[0]) # ndarray(ラベルの要素)
 # layers: Conc2D(畳み込み層), MaxPooling2D(プーリング層)
 
 model = models.Sequential()
-model.add(layers.Conv2D(32, (5, 5), activation='relu', 
+model.add(layers.Conv2D(32, (7, 7), activation='tanh', 
           input_shape=(high, width, 1)))
 model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(32, (3, 3), activation='relu'))
-model.add(layers.MaxPooling2D((2, 2)))
-model.add(layers.Conv2D(32, (3, 3), activation='relu'))
+model.add(layers.Conv2D(32, (5, 5), activation='tanh'))
 model.add(layers.MaxPooling2D((2, 2)))
 
 # model.summary()
@@ -65,8 +62,8 @@ model.add(layers.MaxPooling2D((2, 2)))
 
 model.add(layers.Flatten())
 
-rate = 0.6
-model.add(layers.Dropout(rate))
+rate = 0.1
+# model.add(layers.Dropout(rate))
 # model.add(layers.SpatialDropout1D(rate))
 
 model.add(layers.Dense(88, activation='sigmoid'))  # 0~1での出力(確率が高いほど1に近づく)
@@ -75,7 +72,7 @@ model.summary()
 
 # [optimizerの種類]https://www.tensorflow.org/api_docs/python/tf/keras/optimizers
 #* lossの指定
-loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True), # 確率を使用したloss
+loss=tf.keras.losses.BinaryCrossentropy(), # 確率を使用したloss
 # loss=tf.keras.losses.MeanSquaredError()  # MSE
 
 #----- compile -----
@@ -107,39 +104,40 @@ prediction = prediction.tolist()
 prediction = np.array(prediction, dtype='float')
 """
 
-True_cnt = 0
-False_cnt = 0
+# True_cnt = 0
+# False_cnt = 0
 
-for j in range(len(prediction)):
+# for j in range(len(prediction)):
+for j in range(10):
     pr = prediction[j]
     ans = test_labels[j]
-    pr_m = np.argmax(pr) + 1    # max_index
-    ans_m = np.argmax(ans) + 1  # answer_index
+    # pr_m = np.argmax(pr) + 1    # max_index
+    # ans_m = np.argmax(ans) + 1  # answer_index
     
-    # print("----------------------------")
-    # print("prediction[j]  : ", pr)
-    # print("test_labels[j] : ", ans)
+    print("----------------------------")
+    print("prediction[j]  : ", pr)
+    print("test_labels[j] : ", ans)
     
-    if pr_m == ans_m:
+    # if pr_m == ans_m:
         # print("／＼" , " -index : ", pr_m)
         # print("＼／" , " answer : ", ans_m)
-        True_cnt += 1
-    else:
+        # True_cnt += 1
+    # else:
         # print("＼／" , " -index : ", pr_m)
         # print("／＼" , " answer : ", ans_m)
-        False_cnt += 1
+        # False_cnt += 1
 
-True_Test_Acc = True_cnt/len(prediction)
-print("True_cnt  : ", True_cnt)
-print("False_cnt : ", False_cnt)
-print("Accuracy  : ", True_Test_Acc)
+# True_Test_Acc = True_cnt/len(prediction)
+# print("True_cnt  : ", True_cnt)
+# print("False_cnt : ", False_cnt)
+# print("Accuracy  : ", True_Test_Acc)
 # exit()
 
 import matplotlib.pyplot as plt
 
 #*----- グラフ用(conpile後に置く) -----
 def plot_loss_accuracy_graph(history):
-    plt.title('True_Test_Acc : ' + str(True_Test_Acc))
+    plt.title('True_Test_Acc : ' + str(test_acc))
     plt.xlabel('Epochs')
     plt.ylabel('Loss & Accuracy')
 
@@ -150,7 +148,7 @@ def plot_loss_accuracy_graph(history):
     plt.plot(history.history['accuracy'], "-o", color = (1, 0, 0), label = 'train_accuracy', linewidth = 2)
 
     x = np.arange(0,EPOCHS)
-    y = x * 0 + True_Test_Acc
+    y = x * 0 + test_acc
     plt.plot(x, y, color = (0, 1, 0), label = 'True_Test_Acc', linewidth = 2)
 
     plt.legend(loc = "lower right")

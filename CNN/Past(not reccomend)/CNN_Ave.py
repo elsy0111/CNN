@@ -1,6 +1,4 @@
 #*----- import -----
-from operator import imod
-from tkinter import W
 import tensorflow as tf
 from keras import layers, models
 import matplotlib.pyplot as plt
@@ -9,7 +7,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 #*----- import -----
 
-images = np.load("Dataset_1000/images.npy")
+images = np.load("../Use_CNN_Dataset/03/Dataset_1000_3/images.npy")
 
 labels = np.load("Dataset_1000/labels.npy")
 
