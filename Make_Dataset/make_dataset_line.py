@@ -4,7 +4,6 @@ from random import randint
 import numpy as np
 from scipy.io.wavfile import read
 import os
-import random
 #-----IMPORT-----#
 
 
@@ -115,51 +114,27 @@ while dataset_cnt < dataset_num:
         empty_list = np.zeros(n_empty,dtype = int)
         long_data = list(chain(data,empty_list))
         result += long_data
-
+    
 #------------------Fill Zero----------------#
 
 
 #------------------Delete------------------#
-    split_bool = True
-    timeout_cnt = 0
-    timeout_bool = False
 
-    while split_bool:
-        timeout_cnt += 1
-        cnt = 0
-        n_split = randint(2,5) #! n_split
-        if timeout_cnt > 20:
-            print("TIME OUT")
-            timeout_bool = True
-            break
-        while (cnt < 50):
-            cnt += 1
-            delete_num = randint(0,250000)
-            if delete_num <= len(result) - 0.5 * 48000 * n_split:
-                if (len(result) - delete_num)/n_split <= 48000 * 3:
-                    split_bool = False
-                    break   # ok
-    
-    if timeout_bool:
-        continue
-
+    delete_num = randint(0,250000)
     result = result[:len(result) - delete_num]
+
 #------------------Delete------------------#
-
-#------------------Export audio----------------#
-
-    result = np.array(result,dtype=np.float32)
-    result /= 2**15
-    frames = len(result)
-
-#------------------Export audio----------------#
 
 #-----------------cut list------------------
     c = True
     timeout_cnt = 0
     timeout_bool = False
 
+    frames = len(result)
+
     while c:
+        split_list = []
+        n_split = randint(2,5)
         timeout_cnt += 1
         split_list = []
         if timeout_cnt > 100:
@@ -200,9 +175,13 @@ while dataset_cnt < dataset_num:
     if ValueErr:
         continue
     
+    #--------------0-1--------------#
+    split_audio = np.array(split_audio)
+    split_audio = split_audio/2**14
+    #--------------0-1--------------#
+    
     for j in range(n_split):
         data = split_audio[j] 
-
 
 
 
@@ -221,7 +200,7 @@ while dataset_cnt < dataset_num:
     dataset_cnt += 1
     print("dataset_cnt : ", dataset_cnt)
 
-r = random.randint(1000000,10000000)
+r = randint(1000000,10000000)
 
 os.mkdir("../Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))
 

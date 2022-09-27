@@ -1,20 +1,12 @@
 #-----IMPORT-----#
-from itertools import chain, count
+from itertools import chain
 from random import randint
 import numpy as np
 import librosa
 from scipy.io.wavfile import read
-#-----IMPORT-----#
-
-#-----IMPORT-----#
 import librosa.display
+import os
 #-----IMPORT-----#
-
-images = []
-labels =[]
-
-dataset_cnt = 0
-dataset_num = 100
 
 #--------------Set Parameter--------------#
 PCM = 48000
@@ -26,19 +18,24 @@ F_max = 20000                   # Freq max
 window = np.blackman(fft_size)  # Window Function
 #--------------Set Parameter--------------#
 
+dataset_num = 2000
+N = 3
+
+images = []
+labels =[]
+
+dataset_cnt = 0
+
 while dataset_cnt < dataset_num:
 
     ValueErr = False
 
 #--------------Make Random List(length = 88)--------------#
-    #* ランダムな数を作成
-    # N = randint(3,20)     #! No DEBUG
-    N = 1
 
     t = []
 
     while len(t) < N:
-        j = randint(1,44)
+        j = randint(1,4)
         t.append(j)
         t = list(set(t))
     t.sort()
@@ -53,8 +50,7 @@ while dataset_cnt < dataset_num:
 
     for i in s_list:
         if i == 1:
-            # j = randint(0,1)
-            j = 1    #! Japanese_All
+            j = randint(0,1)
             if j == 1:
                 list88[cnt] = 1
                 list88[cnt + 1] = 0
@@ -63,7 +59,7 @@ while dataset_cnt < dataset_num:
                 list88[cnt + 1] = 1
         cnt += 2
 
-    print("answer_label : ",list88)
+    # print("answer_label : ",list88)
     
 #--------------Make Random List(length = 88)--------------#
 
@@ -123,46 +119,22 @@ while dataset_cnt < dataset_num:
 
 
 #------------------Delete------------------#
-    split_bool = True
-    timeout_cnt = 0
-    timeout_bool = False
 
-    while split_bool:
-        timeout_cnt += 1
-        cnt = 0
-        n_split = randint(2,5) #! n_split
-        if timeout_cnt > 20:
-            print("TIME OUT")
-            timeout_bool = True
-            break
-        while (cnt < 50):
-            cnt += 1
-            delete_num = randint(0,250000)
-            if delete_num <= len(result) - 0.5 * 48000 * n_split:
-                if (len(result) - delete_num)/n_split <= 48000 * 3:
-                    split_bool = False
-                    break   # ok
-    
-    if timeout_bool:
-        continue
-
+    delete_num = randint(0,250000)
     result = result[:len(result) - delete_num]
+
 #------------------Delete------------------#
-
-#------------------Export audio----------------#
-
-    result = np.array(result,dtype=np.float32)
-    result /= 2**15
-    frames = len(result)
-
-#------------------Export audio----------------#
 
 #-----------------cut list------------------
     c = True
     timeout_cnt = 0
     timeout_bool = False
 
+    frames = len(result)
+
     while c:
+        split_list = []
+        n_split = randint(2,5)
         timeout_cnt += 1
         split_list = []
         if timeout_cnt > 100:
@@ -188,7 +160,6 @@ while dataset_cnt < dataset_num:
     split_audio = []
 
     for j in range(n_split):
-    #! for j in range(1):
         split_data = data[split_list[j]:split_list[j + 1]]
         n_empty = 48000 * 3 - len(split_data)
         try:
@@ -204,10 +175,13 @@ while dataset_cnt < dataset_num:
     if ValueErr:
         continue
     
-    #!for j in range(n_split)
-    for j in range(1):
-        data = split_audio[j] 
+    #--------------0-1--------------#
+    split_audio = np.array(split_audio)
+    split_audio = split_audio/2**14
+    #--------------0-1--------------#
 
+    for j in range(n_split):
+        data = split_audio[j] 
         data = data[0:wi*hl]
 
 #--------------STFT--------------#
@@ -218,27 +192,19 @@ while dataset_cnt < dataset_num:
         S_dB = librosa.power_to_db(S, ref = np.max)
 #--------------STFT--------------#
 
-# S_dB.sort(reverse=True)
         S_dB = np.flipud(S_dB)
         
-        #* データセット作成
-        # img_data = imageio.imread(Dataset_dilectory_name + "/images/" + str(j + 1) + '.png')
-
-        """img = glob.glob(Dataset_dilectory_name + "/images/" + str(j + 1) + '.png')
-        img_data = cv2.imread(img)
-        img_data = cv2.cvtColor(img_data, cv2.COLOR_BGR2GRAY)"""
-
         images.append(S_dB)  #* 画像に追加 
-        labels.append(np.array(list88))    #* ラベルに追加
-    
+        labels.append(np.array(list88)) 
+
     dataset_cnt += 1
     print("dataset_cnt : ", dataset_cnt)
 
-print(count)
+r = randint(1000000,10000000)
 
-np.save("Dataset/images.npy",images)
-np.save("Dataset/labels.npy",labels)
+os.mkdir("../Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))
 
-#print(images)
-#print(labels)
+np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/images.npy",images)
+np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/labels.npy",labels)
+
 #*------------------------------------------------------------------------
