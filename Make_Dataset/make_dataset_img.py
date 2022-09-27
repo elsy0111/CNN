@@ -18,8 +18,9 @@ F_max = 20000                   # Freq max
 window = np.blackman(fft_size)  # Window Function
 #--------------Set Parameter--------------#
 
-dataset_num = 2000
+dataset_num = 10
 N = 3
+save = False
 
 images = []
 labels =[]
@@ -136,7 +137,6 @@ while dataset_cnt < dataset_num:
         split_list = []
         n_split = randint(2,5)
         timeout_cnt += 1
-        split_list = []
         if timeout_cnt > 100:
             print("TIME OUT C")
             timeout_bool = True
@@ -151,6 +151,8 @@ while dataset_cnt < dataset_num:
             if split_list[i + 1] - split_list[i] <= 0.5 * 48000:
                 c = True
     
+    print(split_list)
+    
     if timeout_bool:
         continue
 #-----------------cut list------------------
@@ -161,6 +163,7 @@ while dataset_cnt < dataset_num:
 
     for j in range(n_split):
         split_data = data[split_list[j]:split_list[j + 1]]
+        print("len(split_data) = ",len(split_data))
         n_empty = 48000 * 3 - len(split_data)
         try:
             empty_list = np.zeros(n_empty)
@@ -169,7 +172,7 @@ while dataset_cnt < dataset_num:
             ValueErr = True
             break
         same_length_data = np.array(list(chain(split_data,empty_list)))
-        split_audio.append(same_length_data)
+        print(len(same_length_data))
 #---------------------------Make Audio end-----------------------------#
 
     if ValueErr:
@@ -202,9 +205,10 @@ while dataset_cnt < dataset_num:
 
 r = randint(1000000,10000000)
 
-os.mkdir("../Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))
+if save == True:
+    os.mkdir("../DATASET/Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))
 
-np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/images.npy",images)
-np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/labels.npy",labels)
+    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/images.npy",images)
+    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/labels.npy",labels)
 
 #*------------------------------------------------------------------------

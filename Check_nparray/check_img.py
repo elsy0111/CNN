@@ -1,10 +1,14 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-input_path = "../-.npy"
+input_path1 = "../DATASET/Dataset_100_8in3/images.npy"
+input_path2 = "../DATASET/Dataset_100_8in3/labels.npy"
 
-array = np.load(input_path)
+images = np.load(input_path1)
+labels = np.load(input_path2)
 show_images = True
-
+for j in range(9):
+    print(labels[j])
 if show_images == True:
     # 画像の確認
     plt.figure(figsize=(90,90))
@@ -24,7 +28,7 @@ if show_images == True:
         plt.imshow(images[i])
         #plt.xlabel(np.argmax(labels[i]) + 1)
         plt.xlabel(i)
-        print(labels[i])
+        # print(labels[i])
     plt.show()
     plt.figure(figsize=(90,90))
     
