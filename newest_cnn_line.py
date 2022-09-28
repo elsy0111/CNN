@@ -27,8 +27,8 @@ T = True
 load_data = 'my_model-03_test.h5' # 読み込むh5ファイルを指定  
 save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
 
-dataset_img = "/.npy"
-dataset_lab = "/.npy"
+dataset_img = "../DATASET/Dataset_1000_3/images_reshape.npy"
+dataset_lab = "../DATASET/Dataset_1000_3/labels.npy"
 
 N = 3   # 合成数
 used_range = range(0, 8*2+1)   # 使用した読みのデータの範囲(+1は例外も１つ出力するため)
@@ -59,8 +59,6 @@ list_num = 88
 #*----- データセットの読み込み -----
 images = np.load(dataset_img)
 labels = np.load(dataset_lab)
-
-images = (images + 16384)/32768 #! 0-1になるように
 
 print("Dataset num : ", len(images))        # データセットの数
 
@@ -113,7 +111,7 @@ def create_model():
     # 数値の収束に'sigmoid'を使用してる
     model.add(layers.Flatten())
     # ドロップアウト
-    rate = 0.16
+    rate = 0.3
     model.add(layers.Dropout(rate))
     #? l2 正規化: kernel_regularizer=tf.keras.regularizers.l2(0.001)
     model.add(layers.Dense(list_num, activation='sigmoid'))  # 0~1での出力(確率が高いほど1に近づく)

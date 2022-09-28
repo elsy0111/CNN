@@ -1,8 +1,8 @@
 import numpy as np
 
 # npy file
-input_path = "pooling/images.npy"
-output_path = "../-.npy"
+input_path  = "../DATASET/Dataset_1000_3/images.npy"
+output_path = "../DATASET/Dataset_1000_3/images_reshape.npy"
 
 array = np.load(input_path)
 
