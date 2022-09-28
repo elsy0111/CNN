@@ -163,7 +163,7 @@ while dataset_cnt < dataset_num:
     print("n_split : ",n_split)
 
     for j in range(n_split):
-        split_data = data[split_list[j]:split_list[j + 1]]
+        split_data = result[split_list[j]:split_list[j + 1]]
         n_empty = 48000 * 3 - len(split_data)
         try:
             empty_list = np.zeros(n_empty)
