@@ -18,9 +18,9 @@ F_max = 20000                   # Freq max
 window = np.blackman(fft_size)  # Window Function
 #--------------Set Parameter--------------#
 
-dataset_num = 10
+dataset_num = 100
 N = 3
-save = False
+save = True
 
 images = []
 labels =[]
@@ -67,7 +67,6 @@ while dataset_cnt < dataset_num:
 #--------------Make filename by list88--------------#
     audio_list = []
 
-
     for i,j in enumerate(list88):
         if j == 1:
             if i%2 == 0: #日本語
@@ -91,12 +90,10 @@ while dataset_cnt < dataset_num:
 #--------------Make delay_list--------------#
     all_data = []
     delay_list = []
-    raw_audio_length_list = []
     audio_length_list = []
 
     for name in audio_list:
         PCM, data = read("audio/Sample_Audio/"+name+".wav")
-        raw_audio_length_list.append(len(data))
         delay_random_num = randint(0, 5) * 4800    #! random delay No DEBUG
         delay_list.append(delay_random_num)
         cut_offset_data = data[delay_random_num:]
@@ -136,11 +133,14 @@ while dataset_cnt < dataset_num:
     while c:
         split_list = []
         n_split = randint(2,5)
+        #-----timeout-----
         timeout_cnt += 1
         if timeout_cnt > 100:
             print("TIME OUT C")
+            print()
             timeout_bool = True
             break 
+        #-----timeout-----
         for i in range(n_split - 1):
             split_list.append(randint(1,frames))
         split_list.sort()
@@ -148,10 +148,8 @@ while dataset_cnt < dataset_num:
         split_list.append(frames)
         c = False
         for i in range(n_split):
-            if split_list[i + 1] - split_list[i] <= 0.5 * 48000:
+            if ( split_list[i + 1] - split_list[i] ) <= 0.5 * 48000:
                 c = True
-    
-    print(split_list)
     
     if timeout_bool:
         continue
@@ -160,36 +158,43 @@ while dataset_cnt < dataset_num:
 #-----------------cut audio------------------
     split_list[-1] += 1
     split_audio = []
+    same_alldata = []
+
+    print("n_split : ",n_split)
 
     for j in range(n_split):
         split_data = data[split_list[j]:split_list[j + 1]]
-        print("len(split_data) = ",len(split_data))
         n_empty = 48000 * 3 - len(split_data)
         try:
             empty_list = np.zeros(n_empty)
         except ValueError:
             print("value Error (split_data is too large)")
+            print()
             ValueErr = True
             break
         same_length_data = np.array(list(chain(split_data,empty_list)))
-        print(len(same_length_data))
+        same_alldata.append(same_length_data)
 #---------------------------Make Audio end-----------------------------#
 
     if ValueErr:
         continue
     
     #--------------0-1--------------#
-    split_audio = np.array(split_audio)
-    split_audio = split_audio/2**14
+    same_alldata = np.array(same_alldata)
+    same_alldata = same_alldata/2**14
     #--------------0-1--------------#
 
+    print("max",np.max(same_alldata))
+    print("min",np.min(same_alldata))
+
+
     for j in range(n_split):
-        data = split_audio[j] 
-        data = data[0:wi*hl]
+        mono_data = same_alldata[j]
+        mono_data = mono_data[0:wi*hl]
 
 #--------------STFT--------------#
         S = librosa.feature.melspectrogram(
-            y = data, sr = PCM, n_mels = hi, fmax = F_max, hop_length = hl, 
+            y = mono_data, sr = PCM, n_mels = hi, fmax = F_max, hop_length = hl, 
             win_length = fft_size, n_fft = fft_size, window = window)
 
         S_dB = librosa.power_to_db(S, ref = np.max)
@@ -202,8 +207,10 @@ while dataset_cnt < dataset_num:
 
     dataset_cnt += 1
     print("dataset_cnt : ", dataset_cnt)
+    print()
 
 r = randint(1000000,10000000)
+
 
 if save == True:
     os.mkdir("../DATASET/Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))

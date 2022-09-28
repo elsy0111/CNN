@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_path1 = "../DATASET/Dataset_100_8in3/images.npy"
-input_path2 = "../DATASET/Dataset_100_8in3/labels.npy"
+input_path1 = "../DATASET/Dataset_3/images.npy"
+input_path2 = "../DATASET/Dataset_3/labels.npy"
 
 images = np.load(input_path1)
 labels = np.load(input_path2)
