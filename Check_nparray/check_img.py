@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_path1 = "../DATASET/Dataset_3/images.npy"
-input_path2 = "../DATASET/Dataset_3/labels.npy"
+input_path1 = "../DATASET/Dataset_100_3/images.npy"
+input_path2 = "../DATASET/Dataset_100_3/labels.npy"
 
 images = np.load(input_path1)
 labels = np.load(input_path2)
@@ -20,12 +20,12 @@ if show_images == True:
     print(labels[5])
     plt.show()
     """
-    for i in range(9):
-        plt.subplot(3,3,i+1)
+    for i in range(50):
+        plt.subplot(10,5,i+1)
         plt.xticks([])
         plt.yticks([])
         plt.grid(False)
-        plt.imshow(images[i])
+        plt.imshow(images[i+50])
         #plt.xlabel(np.argmax(labels[i]) + 1)
         plt.xlabel(i)
         # print(labels[i])
