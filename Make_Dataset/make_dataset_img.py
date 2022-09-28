@@ -181,7 +181,7 @@ while dataset_cnt < dataset_num:
     
     #--------------0-1--------------#
     same_alldata = np.array(same_alldata)
-    same_alldata = same_alldata/2**14
+    same_alldata = same_alldata/(2**14*N)
     #--------------0-1--------------#
 
     # print("max",np.max(same_alldata))
