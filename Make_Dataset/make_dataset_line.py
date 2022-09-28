@@ -20,6 +20,7 @@ import os
 
 dataset_num = 2000
 N = 3
+save = True
 
 images = []
 labels =[]
@@ -66,7 +67,6 @@ while dataset_cnt < dataset_num:
 #--------------Make filename by list88--------------#
     audio_list = []
 
-
     for i,j in enumerate(list88):
         if j == 1:
             if i%2 == 0: #日本語
@@ -90,12 +90,10 @@ while dataset_cnt < dataset_num:
 #--------------Make delay_list--------------#
     all_data = []
     delay_list = []
-    raw_audio_length_list = []
     audio_length_list = []
 
     for name in audio_list:
         PCM, data = read("audio/Sample_Audio/"+name+".wav")
-        raw_audio_length_list.append(len(data))
         delay_random_num = randint(0, 5) * 4800    #! random delay No DEBUG
         delay_list.append(delay_random_num)
         cut_offset_data = data[delay_random_num:]
@@ -135,12 +133,14 @@ while dataset_cnt < dataset_num:
     while c:
         split_list = []
         n_split = randint(2,5)
+        #-----timeout-----
         timeout_cnt += 1
-        split_list = []
         if timeout_cnt > 100:
             print("TIME OUT C")
+            print()
             timeout_bool = True
             break 
+        #-----timeout-----
         for i in range(n_split - 1):
             split_list.append(randint(1,frames))
         split_list.sort()
@@ -148,7 +148,7 @@ while dataset_cnt < dataset_num:
         split_list.append(frames)
         c = False
         for i in range(n_split):
-            if split_list[i + 1] - split_list[i] <= 0.5 * 48000:
+            if ( split_list[i + 1] - split_list[i] ) <= 0.5 * 48000:
                 c = True
     
     if timeout_bool:
@@ -158,6 +158,9 @@ while dataset_cnt < dataset_num:
 #-----------------cut audio------------------
     split_list[-1] += 1
     split_audio = []
+    same_alldata = []
+
+    print("n_split : ",n_split)
 
     for j in range(n_split):
         split_data = data[split_list[j]:split_list[j + 1]]
@@ -166,22 +169,27 @@ while dataset_cnt < dataset_num:
             empty_list = np.zeros(n_empty)
         except ValueError:
             print("value Error (split_data is too large)")
+            print()
             ValueErr = True
             break
         same_length_data = np.array(list(chain(split_data,empty_list)))
-        split_audio.append(same_length_data)
+        same_alldata.append(same_length_data)
 #---------------------------Make Audio end-----------------------------#
 
     if ValueErr:
         continue
     
     #--------------0-1--------------#
-    split_audio = np.array(split_audio)
-    split_audio = split_audio/2**14
+    same_alldata = np.array(same_alldata)
+    same_alldata = same_alldata/2**14
     #--------------0-1--------------#
     
+    print("max",np.max(same_alldata))
+    print("min",np.min(same_alldata))
+    
+    
     for j in range(n_split):
-        data = split_audio[j] 
+        mono_data = same_alldata[j]
 
 
 
@@ -194,7 +202,7 @@ while dataset_cnt < dataset_num:
 
 
 
-        images.append(data)
+        images.append(mono_data)
         labels.append(np.array(list88))    #* ラベルに追加
 
     dataset_cnt += 1
@@ -202,9 +210,11 @@ while dataset_cnt < dataset_num:
 
 r = randint(1000000,10000000)
 
-os.mkdir("../Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))
 
-np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/images.npy",images)
-np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/labels.npy",labels)
+if save == True:
+    os.mkdir("../Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))
+
+    np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/images.npy",images)
+    np.save("../Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/labels.npy",labels)
 
 #*------------------------------------------------------------------------

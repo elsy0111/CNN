@@ -207,7 +207,6 @@ while dataset_cnt < dataset_num:
 
     dataset_cnt += 1
     print("dataset_cnt : ", dataset_cnt)
-    print()
 
 r = randint(1000000,10000000)
 
