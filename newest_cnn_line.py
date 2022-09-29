@@ -27,13 +27,13 @@ T = True
 load_data = 'my_model-03_test.h5' # 読み込むh5ファイルを指定  
 save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
 
-dataset_img = "../DATASET/Dataset_1000_3/images_reshape.npy"
-dataset_lab = "../DATASET/Dataset_1000_3/labels.npy"
+dataset_img = "../DATASET/Dataset_700_18in7/images_reshape.npy"
+dataset_lab = "../DATASET/Dataset_700_18in7/labels.npy"
 
-N = 3   # 合成数
-used_range = range(0, 8*2+1)   # 使用した読みのデータの範囲(+1は例外も１つ出力するため)
+N = 7   # 合成数
+used_range = range(0, 9*2+1)   # 使用した読みのデータの範囲(+1は例外も１つ出力するため)
 
-EPOCHS = 4  # 学習回数
+EPOCHS = 30  # 学習回数
 batch_size = 2**4
 
 load_model = F  #! H5ファイルを読み込む場合は True
@@ -49,7 +49,7 @@ metrics=[tf.keras.metrics.Precision()]  # thresholds=0 は sigmoid 以外を使�
 loss=tf.keras.losses.BinaryCrossentropy(from_logits=False)  #クロスエントロピー誤差
 
 #* optimizarの指定
-optimizer = 'adam'
+optimizer = tf.keras.optimizers.Adam(learning_rate = 0.00001)
 
 #* -----画像サイズ -----
 high = int(1) #! input_shape
@@ -88,7 +88,7 @@ def create_model():
     model.add(layers.Conv2D(32, (1, 5),
                             #groups=1, # グループを2つに分ける?
                             #padding = "same",
-                            #activation=activation2,
+                            activation=activation2,
                             ))
     #*xception---まだ書いてない
     #? インスタンス正規化
@@ -97,9 +97,9 @@ def create_model():
                                    scale=True,
                                    beta_initializer="random_uniform",
                                    gamma_initializer="random_uniform"))
-    model.add(layers.LayerNormalization(axis=3 , center=True , scale=True))
-    model.add(layers.MaxPooling2D((1, 2)) )
-    model.add(layers.Conv2D(32, (1, 3), activation=activation1))
+    # model.add(layers.LayerNormalization(axis=3 , center=True , scale=True))
+    # model.add(layers.MaxPooling2D((1, 2)) )
+    # model.add(layers.Conv2D(32, (1, 3), activation=activation1))
     model.add(layers.MaxPooling2D((1, 2)))
     #model.add(layers.Conv2D(64, (3, 3), activation=activation1))
     #model.add(layers.MaxPooling2D((2, 2)))
@@ -111,7 +111,7 @@ def create_model():
     # 数値の収束に'sigmoid'を使用してる
     model.add(layers.Flatten())
     # ドロップアウト
-    rate = 0.3
+    rate = 0.16
     model.add(layers.Dropout(rate))
     #? l2 正規化: kernel_regularizer=tf.keras.regularizers.l2(0.001)
     model.add(layers.Dense(list_num, activation='sigmoid'))  # 0~1での出力(確率が高いほど1に近づく)

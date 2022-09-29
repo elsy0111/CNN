@@ -18,8 +18,8 @@ F_max = 20000                   # Freq max
 window = np.blackman(fft_size)  # Window Function
 #--------------Set Parameter--------------#
 
-dataset_num = 100
-N = 3
+dataset_num = 2000
+N = 5
 save = True
 
 images = []
@@ -36,7 +36,7 @@ while dataset_cnt < dataset_num:
     t = []
 
     while len(t) < N:
-        j = randint(1,4)
+        j = randint(1,22)
         t.append(j)
         t = list(set(t))
     t.sort()
@@ -160,7 +160,7 @@ while dataset_cnt < dataset_num:
     split_audio = []
     same_alldata = []
 
-    print("n_split : ",n_split)
+    # print("n_split : ",n_split)
 
     for j in range(n_split):
         split_data = result[split_list[j]:split_list[j + 1]]
@@ -195,7 +195,7 @@ while dataset_cnt < dataset_num:
 #--------------STFT--------------#
         S = librosa.feature.melspectrogram(
             y = mono_data, sr = PCM, n_mels = hi, fmax = F_max, hop_length = hl, 
-            win_length = fft_size, n_fft = fft_size, window = window)
+            win_length = fft_size, n_fft = fft_size)
 
         S_dB = librosa.power_to_db(S, ref = np.max)
 #--------------STFT--------------#

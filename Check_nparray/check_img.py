@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_path1 = "../DATASET/Dataset_100_3/images.npy"
-input_path2 = "../DATASET/Dataset_100_3/labels.npy"
+input_path1 = "../DATASET/Dataset_2000_44in5/images.npy"
+input_path2 = "../DATASET/Dataset_2000_44in5/labels.npy"
+
 
 images = np.load(input_path1)
 labels = np.load(input_path2)
+
 show_images = True
-for j in range(9):
-    print(labels[j])
 if show_images == True:
     # 画像の確認
     plt.figure(figsize=(90,90))
@@ -20,8 +20,8 @@ if show_images == True:
     print(labels[5])
     plt.show()
     """
-    for i in range(50):
-        plt.subplot(10,5,i+1)
+    for i in range(600):
+        plt.subplot(10,60,i+1)
         plt.xticks([])
         plt.yticks([])
         plt.grid(False)
@@ -30,5 +30,3 @@ if show_images == True:
         plt.xlabel(i)
         # print(labels[i])
     plt.show()
-    plt.figure(figsize=(90,90))
-    

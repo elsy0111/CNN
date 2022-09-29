@@ -18,8 +18,8 @@ import os
 
 
 
-dataset_num = 1000
-N = 3
+dataset_num = 1500
+N = 7
 save = True
 
 images = []
@@ -36,7 +36,7 @@ while dataset_cnt < dataset_num:
     t = []
 
     while len(t) < N:
-        j = randint(1,4)
+        j = randint(1,9)
         t.append(j)
         t = list(set(t))
     t.sort()
@@ -135,7 +135,7 @@ while dataset_cnt < dataset_num:
         n_split = randint(2,5)
         #-----timeout-----
         timeout_cnt += 1
-        if timeout_cnt > 100:
+        if timeout_cnt > 20:
             print("TIME OUT C")
             # print()
             timeout_bool = True
