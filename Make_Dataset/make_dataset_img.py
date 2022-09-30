@@ -15,11 +15,11 @@ hl = int(fft_size / 4)          # Frame shift length
 hi = 250                        # Height of image
 wi = 250 - 1                    # Width of image
 F_max = 20000                   # Freq max
-window = np.blackman(fft_size)  # Window Function
 #--------------Set Parameter--------------#
 
 dataset_num = 2000
 N = 5
+all_dataset = 22 # *2(ja,jp)
 save = True
 
 images = []
@@ -36,7 +36,7 @@ while dataset_cnt < dataset_num:
     t = []
 
     while len(t) < N:
-        j = randint(1,22)
+        j = randint(1,all_dataset)
         t.append(j)
         t = list(set(t))
     t.sort()
@@ -135,9 +135,8 @@ while dataset_cnt < dataset_num:
         n_split = randint(2,5)
         #-----timeout-----
         timeout_cnt += 1
-        if timeout_cnt > 100:
-            print("TIME OUT C")
-            print()
+        if timeout_cnt > 20:
+            print("TIME OUT")
             timeout_bool = True
             break 
         #-----timeout-----
@@ -168,8 +167,7 @@ while dataset_cnt < dataset_num:
         try:
             empty_list = np.zeros(n_empty)
         except ValueError:
-            print("value Error (split_data is too large)")
-            print()
+            # print("value Error (split_data is too large)")
             ValueErr = True
             break
         same_length_data = np.array(list(chain(split_data,empty_list)))
@@ -208,13 +206,13 @@ while dataset_cnt < dataset_num:
     dataset_cnt += 1
     print("dataset_cnt : ", dataset_cnt)
 
-r = randint(1000000,10000000)
+r = randint(10000,100000)
 
 
 if save == True:
-    os.mkdir("../DATASET/Dataset_" + str(dataset_num) + "_" + str(N) + "h" + str(r))
+    os.mkdir("../DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) + "in" + str(N) + str(r))
 
-    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/images.npy",images)
-    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(N) +  "h" + str(r) + "/labels.npy",labels)
+    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) +  "in" + str(N) + str(r) + "/images.npy",images)
+    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) +  "in" + str(N) + str(r) + "/labels.npy",labels)
 
 #*------------------------------------------------------------------------
