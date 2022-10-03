@@ -21,23 +21,25 @@ import tensorflow_addons as tfa
 #*----- import -----
 #*----- 初期値設定 -----
 EPOCHS = 10  # 学習回数
-used_range = range((1-1)*2, 22*2+1)   # 使用した読みのデータの範囲(+1は例外も１つ出力するため)
+used_range = range((1-1)*2, 44*2)   # 使用した読みのデータの範囲(+1は例外も１つ出力するため)
 #*----- 読み込み -----
 load_data = 'saved_model/' + 'my_model-07_test-28.h5'    # 読み込むh5ファイルを指定  
 save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
 
-Dataset = '../DATASET' + '/Dataset_2000_44in5'
+d = 1
+
+Dataset = "D:/DATASET/88in3/Dataset_3000_88in3(" + str(1) + ")/"
 images = np.load(Dataset + '/images.npy')
 labels = np.load(Dataset + '/labels.npy')
 #*-----------------------------------------------------------
-N = 5   # 合成数
+N = 3   # 合成数
 view_predictions = 25
 
-batch_size = 2**3
+batch_size = 2**5
 F = False
 T = True
 load_model = F  #! H5ファイルを読み込む場合は True
-show_summary = F # model.summary() を実行する場合は True
+show_summary = T # model.summary() を実行する場合は True
 save = F        # model.save(my_model) を実行する場合は True
 #* metricsの指定
 metrics=[tf.keras.metrics.Precision()]  # thresholds=0 は sigmoid 以外を使用する際に設定、闘値のこと
@@ -85,7 +87,7 @@ def create_model():
     model = models.Sequential()
     model.add(layers.InputLayer(input_shape=(high, width, 1)))
     
-    model.add(layers.Conv2D(32, (5, 5),
+    model.add(layers.Conv2D(32, (4, 4),
                             #groups=1, # グループを2つに分ける?
                             #padding = "same",
                             activation=activation2,
@@ -132,7 +134,7 @@ print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
 if load_model == False:
     print("use  create_model")
 #*----- 学習開始 -----
-#EPOCHS = 13　# ここでepochを再指定
+#EPOCHS = 13 # ここでepochを再指定
 history = model.fit(train_images, train_labels, 
                     epochs=EPOCHS, batch_size=batch_size,
                     validation_data=(test_images, test_labels)                    
