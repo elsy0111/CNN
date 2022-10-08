@@ -214,9 +214,9 @@ r = randint(10000,100000)
 
 
 if save == True:
-    os.mkdir("../DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) + "in" + str(N) + "h" + str(r))
+    os.mkdir("D:/DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) + "in" + str(N) + "h" + str(r))
 
-    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) +  "in" + str(N) +  "h" + str(r) + "/images.npy",images)
-    np.save("../DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) +  "in" + str(N) +  "h" + str(r) + "/labels.npy",labels)
+    np.save("D:/DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) +  "in" + str(N) +  "h" + str(r) + "/images.npy",images)
+    np.save("D:/DATASET/Dataset_" + str(dataset_num) + "_" + str(all_dataset * 2) +  "in" + str(N) +  "h" + str(r) + "/labels.npy",labels)
 
 #*------------------------------------------------------------------------
