@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-input_path1 = "../DATASET/images_reshape.npy"
+input_path1 = "../DATASET/Dataset/images.npy"
 # input_path2 = "D:/DATASET/88in3/Dataset_3000_88in3(1)/labels.npy"
 
 
@@ -17,7 +17,7 @@ if show_images == True:
         plt.xticks([])
         plt.yticks([])
         plt.grid(False)
-        plt.imshow(images[i])
+        plt.imshow(images[i + 1],cmap="gray")
         #plt.xlabel(np.argmax(labels[i]) + 1)
         plt.xlabel(i)
         # print(labels[i])

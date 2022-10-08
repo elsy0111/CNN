@@ -9,9 +9,9 @@ array = np.load(input_path)
 
 print("before shape (枚数, 縦, 横) : ",array.shape)
 
-x,y = array.shape
+x = array.shape
 
-array = array.reshape([1, x, y])
+array = array.reshape([1, x])
 
 print("after shape (枚数, 縦, 横) : ",array.shape)
 

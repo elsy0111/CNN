@@ -17,9 +17,9 @@ wi = 250 - 1                    # Width of image
 F_max = 20000                   # Freq max
 #--------------Set Parameter--------------#
 
-dataset_num = 4000
-N = 20
-all_dataset = 22 # *2(ja,jp)
+dataset_num = 3000
+N = 3
+all_dataset = 44 # *2(ja,jp)
 save = True
 
 images = []
@@ -94,7 +94,8 @@ while dataset_cnt < dataset_num:
 
     for name in audio_list:
         PCM, data = read("audio/Sample_Audio/"+name+".wav")
-        delay_random_num = randint(0, 5) * 4800    #! random delay No DEBUG
+        # delay_random_num = randint(0, 5) * 4800    #! random delay No DEBUG
+        delay_random_num = randint(0, 5 * 4800)     #! random delay No DEBUG
         delay_list.append(delay_random_num)
         cut_offset_data = data[delay_random_num:]
         all_data.append(cut_offset_data)

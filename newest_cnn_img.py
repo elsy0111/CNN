@@ -23,10 +23,9 @@ import tensorflow_addons as tfa
 EPOCHS = 10  # 学習回数
 used_range = range((1-1)*2, 44*2)   # 使用した読みのデータの範囲(+1は例外も１つ出力するため)
 #*----- 読み込み -----
-load_data = 'saved_model/' + 'my_model-07_test-28.h5'    # 読み込むh5ファイルを指定  
+load_data = 'saved_model/' + 'my_model_88in3.h5'    # 読み込むh5ファイルを指定  
 save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
 
-d = 1
 
 Dataset = "D:/DATASET/88in3/Dataset_3000_88in3(" + str(1) + ")/"
 images = np.load(Dataset + '/images.npy')
