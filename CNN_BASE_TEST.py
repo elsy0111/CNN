@@ -25,8 +25,8 @@ EPOCHS = 0  # 学習回数
 used_range = range(0*2, 44*2)  # 使用した読みのデータの範囲
 test_size = 0.16               # テストデータの割合
 
-dataset_count = 1
-kernel_shape = (4,10)
+dataset_count = 8
+kernel_shape = (4,7)
 
 #*----- 読み込み -----
 if dataset_count == 1:
@@ -42,6 +42,7 @@ load_data = 'saved_model/my_model_88in5.h5'          # 読み込むh5ファイ�
 save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
 #Dataset = 'Dataset/Dataset_4003_1-44_10'  # 使用するデータセット
 Dataset = "../DATASET/88in5/Dataset_3000_88in5(" + str(dataset_count) + ")"
+Dataset = "../DATASET"
 #*--------------------------------------------------------
 
 N = 5
@@ -70,7 +71,9 @@ images = (images + 80)/80
 print("len(images)", len(images))        # データセットの数
 
 #*----- データセットを分ける -----
-train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size = test_size)
+# train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size = test_size)
+test_images = images
+test_labels = labels
 
 # print("train_images(len): ", len(train_images)) 
 # print("test_images(len): ", len(test_images)) 
@@ -137,6 +140,7 @@ reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
     cooldown = 0,
     min_lr = 0.000003) # 減少する限度
 
+"""
 # 学習部分
 history = model.fit(train_images, train_labels, batch_size=batch_size,
                     epochs=EPOCHS, 
@@ -151,6 +155,7 @@ print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
 if save == True:
     model.save(save_data)
 
+"""
 
 #*----- テスト結果の出力 -----
 test_loss, test_accuracy = model.evaluate(test_images,  test_labels, verbose=2)

@@ -189,7 +189,6 @@ while dataset_cnt < dataset_num:
 
     for j in range(n_split):
         mono_data = same_alldata[j]
-        print(len(mono_data))
         mono_data = mono_data[0:wi*hl]
 
 #--------------STFT--------------#
@@ -201,8 +200,6 @@ while dataset_cnt < dataset_num:
 #--------------STFT--------------#
 
         S_dB = np.flipud(S_dB)
-        
-        print("shape (枚数, 縦, 横) : ",S_dB.shape)
         
         images.append(S_dB)  #* 画像に追加 
         labels.append(np.array(list88)) 
