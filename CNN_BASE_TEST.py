@@ -25,27 +25,16 @@ EPOCHS = 0  # 学習回数
 used_range = range(0*2, 44*2)  # 使用した読みのデータの範囲
 test_size = 0.16               # テストデータの割合
 
-dataset_count = 8
-kernel_shape = (4,7)
-
 #*----- 読み込み -----
-if dataset_count == 1:
-    load_model = F
-    os.remove("saved_model/my_model_88in5.h5")
-    empty_file = open("saved_model/my_model_88in5.h5", 'w')
-    empty_file.close()
-else:
-    load_model = T
+load_model = T
 print("load_model: ",load_model)
-print("dataset_count: ",dataset_count)
-load_data = 'saved_model/my_model_88in5.h5'          # 読み込むh5ファイルを指定  
+load_data = 'saved_model/model-07-1(1).h5'          # 読み込むh5ファイルを指定  
 save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
 #Dataset = 'Dataset/Dataset_4003_1-44_10'  # 使用するデータセット
-Dataset = "../DATASET/88in5/Dataset_3000_88in5(" + str(dataset_count) + ")"
-Dataset = "../DATASET"
+Dataset = "../DATASET/88in7/Dataset_1000_88in7(1)"
 #*--------------------------------------------------------
 
-N = 5
+N = 7
 
 # 合成数
 show_summary = F # model.summary() を実行する場合は True
@@ -88,7 +77,7 @@ def create_model():
     model = models.Sequential()
     model.add(layers.InputLayer(input_shape=(high, width, 1)))
     
-    model.add(layers.Conv2D(32, kernel_shape,
+    model.add(layers.Conv2D(32, (5,5),
                             #activation=activation1,
                             ))
 
@@ -226,7 +215,8 @@ for j in prediction:
         print("正解数: ",len(same_set))
 
 
-print("")
+print()
+print()
 print("テスト数↓: ",len(same_len_set))
 print("正解数 平均: ",np.average(same_len_set))
 print("\ntest_accuracy: ", test_accuracy)

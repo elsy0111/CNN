@@ -5,7 +5,7 @@
 # [dataset置き場]https://xs011755.xsrv.jp/Files/PROCON/All_Dataset/03/
 # [正規化]https://www.tensorflow.org/addons/tutorials/layers_normalizations
 # [separable conv2d]https://www.tensorflow.org/versions/r2.9/api_docs/python/tf/keras/layers/SeparableConv2D
-# [inception]https://www.tensorflow.org/api_docs/python/tf/keras/applications/inception_v3/InceptionV3
+# [inception]https://www.tensorflow.org/ai_docs/python/tf/keras/applications/inception_v3/InceptionV3
 # [DenseNet]https://www.tensorflow.org/api_docs/python/tf/keras/applications/densenet
 
 #*----- import -----
@@ -20,13 +20,19 @@ import os
 F = False
 T = True
 
+
+print()
+print()
+print()
+print()
+
 #*----- 初期値設定 -----
-EPOCHS = 0  # 学習回数
+EPOCHS = 4  # 学習回数
 used_range = range(0*2, 44*2)  # 使用した読みのデータの範囲
 test_size = 0.16               # テストデータの割合
 
 dataset_count = 1
-kernel_shape = (4,10)
+kernel_shape = (10,20)
 
 #*----- 読み込み -----
 if dataset_count == 1:
@@ -34,8 +40,11 @@ if dataset_count == 1:
     os.remove("saved_model/my_model_88in5.h5")
     empty_file = open("saved_model/my_model_88in5.h5", 'w')
     empty_file.close()
+    print("delete past h5 and create new h5 file")
+    result_data = open('result/result' + str(kernel_shape) + '.txt', 'w', encoding='UTF-8')
 else:
     load_model = T
+    result_data = open('result/result' + str(kernel_shape) + '.txt', 'a', encoding='UTF-8')
 print("load_model: ",load_model)
 print("dataset_count: ",dataset_count)
 load_data = 'saved_model/my_model_88in5.h5'          # 読み込むh5ファイルを指定  
@@ -79,7 +88,7 @@ print("\n", "学習開始")
 #*---------- 学習部分 ----------
 def create_model():
     #* 画像処理(特徴を出す)
-    rate = 0.30#!
+    rate = 0.3#!
     activation1='swish'
     activation2='tanh'
     model = models.Sequential()
@@ -224,6 +233,8 @@ for j in prediction:
 print("")
 print("テスト数↓: ",len(same_len_set))
 print("正解数 平均: ",np.average(same_len_set))
+result_data.write(str(dataset_count) + " : " + str(np.average(same_len_set)) + "\n")
+result_data.close()
 print("\ntest_accuracy: ", test_accuracy)
 print("test_loss: ", test_loss)
 print("images: ", len(images))

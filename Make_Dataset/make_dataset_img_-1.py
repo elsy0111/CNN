@@ -187,7 +187,7 @@ while dataset_cnt < dataset_num:
     # print("min",np.min(same_alldata))
 
 
-    for j in range(n_split):
+    for j in range(n_split - 1):
         mono_data = same_alldata[j]
         mono_data = mono_data[0:wi*hl]
 
