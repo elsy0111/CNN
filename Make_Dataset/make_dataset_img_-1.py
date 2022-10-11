@@ -18,7 +18,7 @@ F_max = 20000                   # Freq max
 #--------------Set Parameter--------------#
 
 dataset_num = 3000
-N = 5
+N = 9
 all_dataset = 44 # *2(ja,jp)
 save = True
 

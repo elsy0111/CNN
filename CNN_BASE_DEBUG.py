@@ -1,11 +1,13 @@
 import os
 file_name = "CNN_BASE.py"
 
-for cnt in range(1,6 + 1):
+start = 1
+end = 10
+for cnt in range(start,end + 1):
     with open(file_name, encoding="utf-8") as f:
         data_lines = f.read()
 
-    if cnt != 1:
+    if cnt != end:
         # 文字列置換
         data_lines = data_lines.replace("dataset_count = " + str(cnt-1), "dataset_count = " + str(cnt))
 
