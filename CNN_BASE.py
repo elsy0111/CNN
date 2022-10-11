@@ -27,7 +27,7 @@ print()
 print()
 
 #*----- 初期値設定 -----
-EPOCHS = 5  # 学習回数
+EPOCHS = 4  # 学習回数
 used_range = range(0*2, 44*2)  # 使用した読みのデータの範囲
 test_size = 0.16               # テストデータの割合
 
