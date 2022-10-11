@@ -21,30 +21,52 @@ import os
 F = False
 T = True
 
+print()
+print()
+print()
+print()
+
 #*----- 初期値設定 -----
 EPOCHS = 0  # 学習回数
 used_range = range(0*2, 44*2)  # 使用した読みのデータの範囲
-test_size = 0.16               # テストデータの割合
+# test_size = 0.16               # テストデータの割合
+
+# dataset_count = 2 #! thissssssssssssssssssssssssssssss
+# txt_name = "64 , 15 , 15 e4"
 
 #*----- 読み込み -----
 load_model = T
 print("load_model: ",load_model)
-load_data = 'saved_model/model-07-1(1).h5'          # 読み込むh5ファイルを指定  
-save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
-#Dataset = 'Dataset/Dataset_4003_1-44_10'  # 使用するデータセット
-Dataset = "../DATASET/88in7/Dataset_1000_88in7(1)"
+load_data = 'saved_model/model-07-1(1).h5'          #! 読み込むh5ファイルを指定  
+# save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
+# Dataset = 'Dataset/Dataset_4003_1-44_10'  
+Dataset = "../DATASET/88in7/Dataset_1000_88in7(1)" #! 使用するデータセット
 #*--------------------------------------------------------
 
-N = 7
+
+
+
+
+
+
+
+
+
+
+
+
+
+N = 5 #! Num
 
 # 合成数
 show_summary = F # model.summary() を実行する場合は True
-save = T         # model.save(my_model) を実行する場合は True
+save = F         # model.save(my_model) を実行する場合は True
 
 view_predictions = 10 # 予測値表示数
 batch_size = 2**3     # バッチサイズ
 
 #*----- compile用 -----
+
 metrics = [tf.keras.metrics.Precision()]  # thresholds=0 は sigmoid 以外を使用する際に設定、闘値のこと
 loss = tf.keras.losses.BinaryCrossentropy(from_logits=False)  #クロスエントロピー誤差
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.000008)#!
@@ -64,7 +86,6 @@ print("len(images)", len(images))        # データセットの数
 # train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size = test_size)
 test_images = images
 test_labels = labels
-
 # print("train_images(len): ", len(train_images)) 
 # print("test_images(len): ", len(test_images)) 
 
@@ -72,22 +93,24 @@ print("\n", "学習開始")
 #*---------- 学習部分 ----------
 def create_model():
     #* 画像処理(特徴を出す)
-    rate = 0.30#!
+    rate = 0.35#!
     activation1='swish'
     activation2='tanh'
     model = models.Sequential()
     model.add(layers.InputLayer(input_shape=(high, width, 1)))
     
-    model.add(layers.Conv2D(32, (5,5),
-                            #activation=activation1,
+    model.add(layers.Conv2D(64, (15, 15),
+                            #padding = "same"
+                            activation=activation1,
                             ))
 
-    model.add(tfa.layers.InstanceNormalization(axis=3, 
+    model.add(tfa.layers.InstanceNormalization(
+                                   axis=3, 
                                    center=True, 
                                    scale=True,
                                    beta_initializer="random_uniform",
                                    gamma_initializer="random_uniform"))
-    model.add(layers.MaxPooling2D((2, 2)) )
+    model.add(layers.MaxPooling2D((2, 2)))
  
     #*----- ニューラルネットワーク -----
     model.add(layers.Flatten())
@@ -118,18 +141,17 @@ print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
 
 if load_model == False:
     print("use  create_model")
-#*----- 学習開始 -----
+
 #** 学習率の減衰自動化
 reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
-    monitor = 'val_precision', # 監視対象(val_loss or val_precision)
-    factor = 0.8, # 減少する割合。new_lr = factor * lr
-    patience = 3, # 何エポック変化が見られなかったら変更するか
-    verbose = 1,  # 学習率減少時にメッセージを表示
-    mode = 'max', # 監視する値の増加が停止した際に変更(min, auto も選択可能)
-    epsion = 0.060, # 改善があったと判断する閾値
-    cooldown = 0,
-    min_lr = 0.000003) # 減少する限度
-
+    monitor = 'val_loss', # 監視対象(val_loss or val_precision)
+    factor = 0.95,  # 減少する割合。new_lr = factor * lr
+    patience = 2,   # 何エポック変化が見られなかったら変更するか
+    verbose = 1,    # 学習率減少時にメッセージを表示
+    mode = 'min',   # 監視する値の増加が停止した際に変更(min, auto も選択可能)
+    epsion = 0.020, # 改善があったと判断する閾値
+    cooldown = 0,   # 改善後に休む数
+    min_lr = 0.000005) # 減少する限度
 """
 # 学習部分
 history = model.fit(train_images, train_labels, batch_size=batch_size,
@@ -144,7 +166,6 @@ print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
 # データの保存
 if save == True:
     model.save(save_data)
-
 """
 
 #*----- テスト結果の出力 -----

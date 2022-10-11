@@ -2,7 +2,7 @@ import os
 file_name = "CNN_BASE.py"
 
 start = 1
-end = 10
+end = 5
 for cnt in range(start,end + 1):
     with open(file_name, encoding="utf-8") as f:
         data_lines = f.read()

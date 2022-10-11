@@ -17,9 +17,9 @@ from sklearn.model_selection import train_test_split
 import tensorflow_addons as tfa
 import os
 #*----- import -----
+
 F = False
 T = True
-
 
 print()
 print()
@@ -31,26 +31,29 @@ EPOCHS = 4  # 学習回数
 used_range = range(0*2, 44*2)  # 使用した読みのデータの範囲
 test_size = 0.16               # テストデータの割合
 
-dataset_count = 1
-kernel_shape = (10,15)
+dataset_count = 3 #! thissssssssssssssssssssssssssssss
+txt_name = "64 , 15 , 15 e4"
 
 #*----- 読み込み -----
 if dataset_count == 1:
     load_model = F
-    os.remove("saved_model/my_model_88in5.h5")
+    try:
+        os.remove("saved_model/my_model_88in5.h5")
+    except FileNotFoundError:
+        print("make_file (no_problems) failed")
     empty_file = open("saved_model/my_model_88in5.h5", 'w')
     empty_file.close()
     print("delete past h5 and create new h5 file")
-    result_data = open('result/result' + str(kernel_shape) + '.txt', 'w', encoding='UTF-8')
+    result_data = open('result/result' + str(txt_name) + '.txt', 'w', encoding='UTF-8')
 else:
     load_model = T
-    result_data = open('result/result' + str(kernel_shape) + '.txt', 'a', encoding='UTF-8')
+    result_data = open('result/result' + str(txt_name) + '.txt', 'a', encoding='UTF-8')
 print("load_model: ",load_model)
 print("dataset_count: ",dataset_count)
 load_data = 'saved_model/my_model_88in5.h5'          # 読み込むh5ファイルを指定  
 save_data = load_data # 保存するファイル(load_dataにすると上書き保存)
 #Dataset = 'Dataset/Dataset_4003_1-44_10'  # 使用するデータセット
-Dataset = "../DATASET/88in5/Dataset_3000_88in5(" + str(dataset_count) + ")"
+Dataset = "F:/DATASET/1sample/88in5/Dataset_3000_88in5(" + str(dataset_count) + ")"
 #*--------------------------------------------------------
 
 N = 5
@@ -63,6 +66,7 @@ view_predictions = 10 # 予測値表示数
 batch_size = 2**3     # バッチサイズ
 
 #*----- compile用 -----
+
 metrics = [tf.keras.metrics.Precision()]  # thresholds=0 は sigmoid 以外を使用する際に設定、闘値のこと
 loss = tf.keras.losses.BinaryCrossentropy(from_logits=False)  #クロスエントロピー誤差
 optimizer = tf.keras.optimizers.Adam(learning_rate=0.000008)#!
@@ -81,6 +85,7 @@ print("len(images)", len(images))        # データセットの数
 #*----- データセットを分ける -----
 train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size = test_size)
 
+
 # print("train_images(len): ", len(train_images)) 
 # print("test_images(len): ", len(test_images)) 
 
@@ -88,22 +93,24 @@ print("\n", "学習開始")
 #*---------- 学習部分 ----------
 def create_model():
     #* 画像処理(特徴を出す)
-    rate = 0.3#!
+    rate = 0.35#!
     activation1='swish'
     activation2='tanh'
     model = models.Sequential()
     model.add(layers.InputLayer(input_shape=(high, width, 1)))
     
-    model.add(layers.Conv2D(32, kernel_shape,
-                            #activation=activation1,
+    model.add(layers.Conv2D(64, (15, 15),
+                            #padding = "same"
+                            activation=activation1,
                             ))
 
-    model.add(tfa.layers.InstanceNormalization(axis=3, 
+    model.add(tfa.layers.InstanceNormalization(
+                                   axis=3, 
                                    center=True, 
                                    scale=True,
                                    beta_initializer="random_uniform",
                                    gamma_initializer="random_uniform"))
-    model.add(layers.MaxPooling2D((2, 2)) )
+    model.add(layers.MaxPooling2D((2, 2)))
  
     #*----- ニューラルネットワーク -----
     model.add(layers.Flatten())
@@ -134,19 +141,19 @@ print('Restored model, accuracy: {:5.2f}%'.format(100 * acc))
 
 if load_model == False:
     print("use  create_model")
-#*----- 学習開始 -----
+
 #** 学習率の減衰自動化
 reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
-    monitor = 'val_precision', # 監視対象(val_loss or val_precision)
-    factor = 0.8, # 減少する割合。new_lr = factor * lr
-    patience = 3, # 何エポック変化が見られなかったら変更するか
-    verbose = 1,  # 学習率減少時にメッセージを表示
-    mode = 'max', # 監視する値の増加が停止した際に変更(min, auto も選択可能)
-    epsion = 0.060, # 改善があったと判断する閾値
-    cooldown = 0,
-    min_lr = 0.000003) # 減少する限度
+    monitor = 'val_loss', # 監視対象(val_loss or val_precision)
+    factor = 0.95,  # 減少する割合。new_lr = factor * lr
+    patience = 2,   # 何エポック変化が見られなかったら変更するか
+    verbose = 1,    # 学習率減少時にメッセージを表示
+    mode = 'min',   # 監視する値の増加が停止した際に変更(min, auto も選択可能)
+    epsion = 0.020, # 改善があったと判断する閾値
+    cooldown = 0,   # 改善後に休む数
+    min_lr = 0.000005) # 減少する限度
 
-# 学習部分
+#*----- 学習部分 -----
 history = model.fit(train_images, train_labels, batch_size=batch_size,
                     epochs=EPOCHS, 
                     validation_data=(test_images, test_labels),
